@@ -1,0 +1,95 @@
+<!doctype html>
+<!-- Website template by freewebsitetemplates.com -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>The Future of Top Games</title>
+	<link rel="stylesheet" href="css/style.css" type="text/css">
+	<link rel="stylesheet" type="text/css" href="css/mobile.css">
+	<script src="js/mobile.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+	<div id="page">
+		<div id="header">
+			<div>
+				<ul id="navigation">
+					<li>
+						<a href="index.html">Home</a>
+					</li>
+					<li class="selected">
+						<a href="about.html">Top Games</a>
+					</li>
+					<li class="menu">
+						<a href="projects.html">Future Worldwide Sensations</a>
+						<ul class="primary">
+						</ul>
+					</li>
+					<li>
+						<a href="contact.html">Contact</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<img  src="images/minecraft.png" alt="minecraft" style="width:220px; transform: translate(50px,-50px); position: absolute;"/>
+		<img  src="images/fortnite.png" alt="fortnite" style="width:300px; transform: translate(1115px,-50px); position: absolute; z-index: 1"/>
+		<img  src="images/PUBG.png" alt="PUBG" style="width:200px; transform: translate(1172px,220px); position: absolute;"/>
+		<img  src="images/League.png" alt="LeagueOfLegends" style="width:200px; transform: translate(60px,215px); position: absolute;"/>
+		
+		<div id="body" class="about">
+			<div class="header">
+				<div>
+					<h1>Where Top Games Are Headed</h1>
+					<h2>A forcasting analysis of top games</h2>
+					<p>  The predictive analysis below uses the RAWG API to gather data on different top video games' Youtube viewership, and graphs it over time and into the future. The forecast is made by an algorithm finding the average slope of the graph, which is representative of the average change in youtube viewership. That slope is applied into the future to create projections of the game's Youtube viewership. Simply enter the name of a top 100 game, and the corresponding historical graph and future projection will be presented.</p>
+				</div>
+			</div>
+			<div class="body">
+				<div>
+					<h2 style="transform: translate(-150px);">Input a top 100 Game</h2>
+					<input type="text" value="Input a top 100 Game" class ="game" onblur="this.value=!this.value?'Input a top 100 Game':this.value;" onfocus="this.select()" onclick="this.value='';">
+					<h2 style="transform: translate(400px,-80px);">Click to Find Your Game's<br> Predictions</h2>
+					<button class="submit"><i class="fa fa-hand-o-down"></i></button>
+				</div>
+			</div>
+			<div class="footer">
+				<div>
+					<img src="images/graphLine.png" alt="" style="width:60%; position:absolute; transform: translate(80px,-60px);">
+					<h2>Historical Graph of _____ <br> Youtube Views</h2>
+					<h2 style="transform: translate(480px,-60px);"> Forcast of _____<br> Youtube Views</h2>
+					<p class="vert"> Daily Youtube Views (Thousands)<br><br> 10	&emsp; &emsp; 20 &emsp; &emsp; 30  &emsp; &emsp; 40 &emsp; &emsp;  50 </p>
+					<p class="hor"> 11/1	&emsp; &emsp; 11/2 &emsp; &emsp; 11/3  &emsp; &emsp; 11/4 &emsp; &emsp;  11/5 &emsp; &emsp;  11/6 &emsp; &emsp;  11/7 &emsp; &emsp;  11/8 &emsp; &emsp;  11/9 &emsp; &emsp;  11/10 &emsp; &emsp;  11/11 <br><br> </p>
+					<p class="date"> Date (2020) </p>
+				</div>
+			</div>
+			<div class="section">
+				<div>
+					<h2 style="transform: translate(-220px);">Total Predicted Views For Next 5 Days:</h2>
+					<p style="transform: translate(-230px,70px);"><u>325, 000 Views</u></p>
+				</div>
+				<div>
+					<h2 style="transform: translate(380px,-113px);"> Getting Larger? <br> </h2>
+					<p> <i class="fa fa-check-square" style="font-size: 70px; transform: translate(380px,-60px);" aria-hidden="true"></i> </p>
+				</div>
+			</div>
+		</div>
+		<div id="footer">
+			<div class="connect">
+				<div>
+					<u><a href="https://rawg.io/apidocs" class="links">Data Source</a></u>&emsp;&emsp;
+					<u><a href="https://www.youtube.com/channel/UCUT8RoNBTJvwW1iErP6-b-A" class="links">Favorite Youtuber</a></u>&emsp;&emsp;
+					<u><a href="https://www.twitch.tv/sceptic" class="links">Favorite Streamer</a></u>&emsp;&emsp;
+					<h1>Relevant Sources:</h1>
+				</div>
+			</div>
+			<div class="footnote">
+				<div>
+					<p>&copy; ORIGINAL TEMPLATE BY SPACE PROSPECTION | ALL RIGHTS RESERVED</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
