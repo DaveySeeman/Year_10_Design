@@ -1,6 +1,6 @@
-
 import math
 import matplotlib.pyplot as plt
+plt.title('Starting Number of Juggler Sequence vs Length')
 plt.ylabel('Length of Juggler Sequence')
 plt.xlabel('Starting number of Juggler Sequence')
 plt.ylim(0, 20)
