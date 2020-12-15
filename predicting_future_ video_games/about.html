@@ -97,31 +97,22 @@
 	<script type="text/javascript">
 
 
-		function retrieve(game) {
-			const data = null;
+		async function retrieve(game) {
 
-			const xhr = new XMLHttpRequest();
-
-			xhr.open("GET", "https://rawg-video-games-database.p.rapidapi.com/games/"+ game);
-			xhr.setRequestHeader("x-rapidapi-key", "c63cce8595msha94fc66834188d3p194abcjsn127fde1877ae");
-			xhr.setRequestHeader("x-rapidapi-host", "rawg-video-games-database.p.rapidapi.com");
-
-			xhr.send(data);
-
-			xhr.addEventListener("readystatechange", getData);
-
-			//views = getData()
-
+			await xhr.open("GET", "https://rawg-video-games-database.p.rapidapi.com/games/"+ game);
+			await xhr.setRequestHeader("x-rapidapi-key", "c63cce8595msha94fc66834188d3p194abcjsn127fde1877ae");
+			await xhr.setRequestHeader("x-rapidapi-host", "rawg-video-games-database.p.rapidapi.com");
+			await xhr.send();
+			await xhr.addEventListener("readystatechange", getData);
 		}
 
 		function getData (){
 
-			if (this.readyState === this.DONE) {
+			if (xhr.readyState === XMLHttpRequest.DONE) {
 
-				//console.log(this.responseText);
-
-				var todayData = JSON.parse(this.responseText);
-				var todayViews = todayData.youtube_count;
+				var todayData = JSON.parse(xhr.responseText);
+                todayViews = todayData.youtube_count;
+                console.log(todayViews)
 			}
 		}
 
@@ -130,14 +121,14 @@
 
 			daysBack = 5
 			last5Days = []
-			const upordown = Math.random() < 0.5
+			const upordown = Math.random() > 0.5
 
 			if (upordown == true){
 
-				generalSlope = Math.random() * float/15  //the slope of the line will be based on how large the number is
+				generalSlope = Math.random() * float/15  //the slope of the line will be based on how large this number is
 
 			} else {
-				generalSlope = Math.random() * float/-15  //the slope of the line will be based on how large the number is
+				generalSlope = Math.random() * float/-15  //the slope of the line will be based on how large this number is
 			}
 
 
@@ -151,7 +142,6 @@
 			last5Days.reverse();
 
 			return last5Days
-
 		}
 
 
@@ -179,12 +169,12 @@
     				range: [0, 10]
   				},
   				yaxis: {
-    				range: [Math.min.apply(Math, list)*0.8,Math.max.apply( Math, list)*1.1]
+    				range: [Math.min.apply(Math, list)*0.8,Math.max.apply(Math, list)*1.1]
   				},
   				margin: {l: 60, r: 10, b: 10, t: 10, pad: 4}
   			};
 
-			Plotly.newPlot(listgraph,  data, trendLine, layout);
+			Plotly.newPlot(listgraph, data, trendLine, layout);
 		}
 
 
@@ -193,8 +183,28 @@
 		//}
 
 
+		//retrieve("fortnite")
 
-		retrieve("fortnite");
+		async function test(todayViews){
+			await retrieve("fortnite");
+			console.log("gothere");
+			console.log(todayViews);
+		}
+
+
+		var xhr = new XMLHttpRequest();
+		var todayViews;
+
+		test(todayViews);
+
+
+
+
+
+
+
+
+
 		myList = generateRandomData(1000);
 		console.log(myList);
 		graphList(myList);
