@@ -1,4 +1,4 @@
-/* Website template by freewebsitetemplates.com */
+/* Website temlate by freewebsitetemplates.com */
 body {
 	margin: 0;
 	padding: 0;
@@ -258,7 +258,7 @@ img {
  @keyframes x {
 		 100% { transform: translateX(calc(50vw - 350px))}}
  @keyframes y {
-	 	100% { transform: translateY(calc(50vh - 350px));}
+	 	100% { transform: translateY(calc(55vh - 350px));}
 }
 
 
@@ -723,7 +723,7 @@ img {
 	font-size: 28px;
 	margin-bottom: 0px;
 	position: absolute;
-	transform: translate(320px,30px);
+	transform: translate(220px,30px);
 }
 
 
@@ -803,6 +803,7 @@ img {
 #body .header div form input#submit:hover {
 	background-color: #620031;
 }
+
 /*----------------------------------------footer-styles---------------------------------------*/
 #footer {
 	margin: 0;
@@ -844,9 +845,8 @@ img {
 	position: relative;
 	left:400px;
 	top: 5px;
-
-
 }
+
 #footer .footnote {
 	background-color: #FFFFFF;
 	margin: 0;
@@ -872,11 +872,4 @@ img {
 	text-align: center;
 	text-transform: uppercase;
 	width: 940px;
-}
-#wix {
-	max-width: 728px;
-	margin: 0 auto;
-}
-#wix a img {
-	width: 100%;
 }
