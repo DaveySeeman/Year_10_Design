@@ -42,7 +42,7 @@
 					<div>
 						<h1>Where Top Games Are Headed</h1>
 						<h2>A forecasting analysis of top games</h2>
-						<p>  The predictive analysis below uses the RAWG API to gather data on different top video games' Youtube viewership, and graphs it over time and into the future. The forecast is made by an algorithm finding the average slope of the graph, which is representative of the average change in youtube viewership. That slope is applied into the future to create projections of the game's Youtube viewership. Simply enter the name of a top 100 game, and the corresponding historical graph and future projection will be presented.</p>
+						<p>  The predictive analysis below uses the RAWG API to gather data on different top video games' Youtube viewership, and graphs it over time and into the future. The forecast is made by an algorithm finding the average slope of the graph, which is representative of the average change in youtube viewership. That slope is applied into the future to create projections of the game's Youtube viewership. Simply enter the name of almost any game <a href="https://rawg.io/" style="color: orange;">(Click Here to see RAWG's Games)</a>, and the corresponding historical graph and future projection will be presented. </br></br> Note: My database does not contain historical data so the historical data points in the graph are not true values.</p>
 					</div>
 				</div>
 				<div class="body">
@@ -93,9 +93,8 @@
 	</body>
 	<script type="text/javascript">
 
-
 		async function retrieve(game) { //Insert string with name of game
-
+			game = game.replace(/\s+/g, "-").toLowerCase();
 			url = "https://rawg-video-games-database.p.rapidapi.com/games/" + game;
             apiHeaders = 
             {
@@ -191,7 +190,7 @@
 					document.getElementById("larger").innerHTML = "<span style='font-size:100px; position: absolute; transform: translate(365px,-40px);'>&#9746;</span>";
 				}
 			} else {
-				alert("Sorry, this game could not be found")
+				alert("Sorry, this game could not be found. Make sure you spelled the name of your game correctly.")
 			}
 		}
 
