@@ -1,0 +1,429 @@
+@charset "UTF-8";
+@import url(font-awesome.min.css);
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400|Passion+One:400");
+
+/*
+	Original Template by "TEMPLATED"
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+*/
+
+
+	
+
+/* Box Model */
+
+	*, *:before, *:after {
+		-moz-box-sizing: border-box;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+	}
+
+/* Basic */
+
+	@-ms-viewport {
+		width: device-width;
+	}
+
+	body {
+		-ms-overflow-style: scrollbar;
+	}
+
+	@media screen and (max-width: 480px) {
+
+		html, body {
+			min-width: 320px;
+		}
+
+	}
+
+	body {
+		background: lightslategrey;
+	}
+
+/* Text */
+
+	body, input, select, textarea { /* Idea post text area */
+		color: black;
+		font-family: "Source Sans Pro", sans-serif;
+		font-size: 14pt;
+		font-weight: 300;
+		line-height: 1.65;
+	}
+
+		@media screen and (max-width: 1680px) {
+
+			body, input, select, textarea {
+				font-size: 12pt;
+			}
+
+		}
+
+/* Header */
+
+	.header h1 {
+			font-size: 2.8em;
+			font-family: "Lucida Console", "Courier New", monospace;
+			color: black;
+	}
+	.header h2 {
+			position: absolute; 
+			transform: translate(540px);
+			font-family: "Lucida Console", "Courier New", monospace;
+	}
+	.header button { /* add post icon */
+			font-size: 4.2em;
+			float: right;
+			color: green;
+			transform: translate(-50px,-110px);
+			border-radius: 10px;
+			border: none;
+			outline: 0; /* gets rid of blue box around button border that weirdly appears after clicking on it */
+			background: transparent;
+			cursor: pointer;
+	}
+
+/* See new post button style */
+	.likesButton{
+		width: 150px;
+		position: absolute;
+		height: 60px;
+		color: lime;
+		font-size: 25px;
+		font-family: "Lucida Console", "Courier New", monospace;
+		background: salmon;
+		border: none;
+		border-radius: 5px;
+		left:100px;
+		top: 50px;
+		outline: 0;
+	}
+
+	.hiddenButton{
+		font-size: 1.2em;
+		font-family: "Lucida Console", "Courier New", monospace;
+		color: green;
+		border-radius: 10px;
+		border: none;
+		cursor: pointer;
+		width:150px;
+		transform: translate(30px,-120px);
+		visibility: hidden;
+		outline: 0;
+	}
+
+/* post box organization */
+
+	.thumbnails {
+		display: -moz-flex;
+		display: -webkit-flex;
+		display: -ms-flex;
+		display: flex;
+		-moz-align-items: stretch;
+		-webkit-align-items: stretch;
+		-ms-align-items: stretch;
+		align-items: stretch;
+		-moz-justify-content: center;
+		-webkit-justify-content: center;
+		-ms-justify-content: center;
+		justify-content: center;
+		-moz-flex-wrap: wrap;
+		-webkit-flex-wrap: wrap;
+		-ms-flex-wrap: wrap;
+		flex-wrap: wrap;
+	}
+
+	.thumbnails .box { /* Post Box Styling */
+			margin: 2em 2em 2em 2em;
+			padding-bottom: 20px;
+			width: 300px;
+			height: 350px;
+			background: white;
+			transition: opacity 0.2s ease; /* When opacity of posts changes on mouse hover, it will ease in */
+			text-align: center;
+	}
+
+	.thumbnails .openBtn { /* Post Box Styling */
+			margin: 2em 2em 2em;
+			background: white;
+			transition: opacity 0.2s ease; /* When opacity of posts changes on mouse hover, it will ease in */
+			text-align: center;
+			border: none;
+			cursor: pointer;
+			outline: none;
+			font-family: "Source Sans Pro", sans-serif;
+			padding: -50px;
+	}
+
+	.thumbnails a{
+		color: black;
+		text-decoration: none;
+	}
+
+/* on Post Hover */
+
+
+	.fa-heart{ /* heart icon style */
+		visibility: hidden;
+		color: red;
+		font-size: 35px;
+		transform: translate(-35px,-50px);
+	}
+
+	.likesTxt{
+		visibility: hidden;
+		transform: translate(20px,-112px);
+		font-size: 30px;
+	}
+
+	.box:hover{
+		opacity: 0.5;
+		cursor: pointer;
+	}
+
+	.box:hover > i{
+		visibility: visible;
+
+	}
+
+	.box:hover > p{
+		visibility: visible;
+
+	}
+
+	.postTitle{
+		transform: translate(0,30px);
+		font-size: 20px;
+		font-family: "Source Sans Pro", sans-serif;
+	}
+
+	.postDesTeaser{
+		transform: translate(0,30px);
+		font-size: 16px;
+		font-family: "Source Sans Pro", sans-serif;
+	}
+
+/* Post image styling */
+
+	.image-fit {
+		width: 100%;
+		height: 60%
+	}
+
+/* Add Post Modal Popup */
+
+
+	/* The Modal (background) */
+	.modal {
+	  display: none; /* Hidden by default */
+	  position: fixed; /* Stay in place */
+	  z-index: 1; /* Sit on top */
+	  padding-top: 100px; /* Location of the box */
+	  left: 0;
+	  top: -70px;
+	  width: 100%; /* Full width */
+	  height: 120%; /* Full height */
+	  overflow: auto; /* Enable scroll if needed */
+	  background-color: rgb(0,0,0); /* Fallback color */
+	  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+	  font-size: 16px;
+	}
+
+	/* Modal Content */
+	.modal-content {
+	  position: relative;
+	  background-color: #fefefe;
+	  margin: auto;
+	  border: 1px solid #888;
+	  width: 50%;
+	  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	  -webkit-animation-name: animatetop;
+	  -webkit-animation-duration: 0.4s;
+	  animation-name: animatetop;
+	  animation-duration: 0.4s
+	}
+
+	.modal .descriptionInputs{
+		width: 75%;
+		font-size: 18px;
+		padding-bottom: -10px;
+	}
+
+	.modal .imageInsert{
+		transform: translate(150px,-56px);
+		font-size: 18px;
+		border-radius: 5px;
+		border: none;
+	}
+
+	/* Add Animation */
+	@-webkit-keyframes animatetop {
+	  from {top:-300px; opacity:0} 
+	  to {top:0; opacity:1}
+	}
+
+	@keyframes animatetop {
+	  from {top:-300px; opacity:0}
+	  to {top:0; opacity:1}
+	}
+
+	.modal .break{
+		visibility: hidden;
+		font-size: 5px;
+	}
+
+	.modal-header {
+	  padding: 2px 6px;
+	  height: 60px;
+	  background-color: #5cb85c;
+	  color: white;
+	  text-align: center;
+	}
+
+	.modal h2{
+		transform: translate(275px,-10px);
+		color: black;
+		font-family: "Lucida Console", "Courier New", monospace;
+	}
+
+	.modal h3{
+		transform: translate(10px,-8px);
+		color: black;
+	}
+
+	.modal-footer {
+	  padding: 2px 6px;
+	  height: 55px;
+	  background-color: #5cb85c;
+	  color: white;
+	}
+
+	.modal .submit{
+		float: right;
+		transform: translate(0,-52px);
+	}
+
+	
+
+/* Description Page Styling */
+
+	.description-modal{
+		display: none; /* Hidden by default */
+		position: fixed; /* Stay in place */
+		z-index: 1; /* Sit on top */
+		padding-top: 100px; /* Location of the box */
+		left: 0;
+		top: -70px;
+		width: 100%; /* Full width */
+		height: 120%; /* Full height */
+		overflow: auto; /* Enable scroll if needed */
+		background-color: rgb(0,0,0); /* Fallback color */
+		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+		font-size: 16px;
+	}
+
+	.description-content {
+	  position: relative;
+	  background-color: #fefefe;
+	  margin: auto;
+	  border: 1px solid #888;
+	  width: 80%;
+	  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	  -webkit-animation-name: animatetop;
+	  -webkit-animation-duration: 0.4s;
+	  animation-name: animatetop;
+	  animation-duration: 0.4s
+	}
+
+	.description-header{
+		padding: 2px 6px;
+		height: 60px;
+		background-color: #5cb85c;
+		color: white;
+		text-align: center;
+	}
+
+	.description-header i{
+		transform: translate(465px, -70px);
+	}
+
+	.description-header p{
+		transform: translate(0, -10px);
+		font-size: 22px;
+		color: black;
+		font-family: "Lucida Console", "Courier New", monospace;
+	}
+
+	.likes-number{
+		position: absolute;
+		left: 93%;
+		top: 0.8%;
+		font-family: "Source Sans Pro", sans-serif;
+	}
+
+	.description-body p{
+		font-size: 18px;
+		text-align: center;
+	}
+
+	.description-body h5{
+		margin: 0 auto;
+		font-size: 14px;
+		text-align: center;
+		width: 400px;
+	}
+
+	.description-image{
+		position: absolute;
+		width: 26%;
+		height: 60%;
+		left: 50px;
+		top: 105px;
+		border-radius: 30px;
+	}
+
+	.comment-title{
+		margin: 0 auto;
+		position: absolute;
+		top: 70px;
+		left: 81%;
+		text-align: right;
+	}
+
+	.insertComment{
+		padding: 2px 6px;
+		height: 60px;
+		background: lightgrey;
+		text-align: center;
+	}
+
+	.commentInput{
+		border-radius: 15px;
+		border: none;
+		width: 550px;
+		height: 50px;
+		transform: translate(380px,10px);
+		outline: 0;
+	}
+
+	.commentSubmit{
+		border-radius: 15px;
+		border: none;
+		color: green;
+		width: 40px;
+		padding: 5px;
+		font-size: 30px;
+		outline: 0;
+		transform: translate(15px,5px);
+		cursor: pointer;
+	}
+
+	.fa-paper-plane{
+		font-size: 38px;
+		transform: translate(400px,15px);
+		color: lime;
+	}
+
+
+
+

@@ -1,0 +1,374 @@
+<!DOCTYPE HTML>
+<!--
+	Full Motion by TEMPLATED
+	templated.co @templatedco
+	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
+-->
+<html>
+	<head>
+		<title>Full Motion</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
+
+		<!-- Firebase links -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-analytics.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-database.js"></script>
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+
+	</head>
+	<body id="top">
+
+		<!-- Header/Banner -->
+			<section id="banner" class="header">
+				<div class="inner">
+					<header>
+						<center><h1>IdeaNet</h1></center>
+						<h2><i>Where Ideas Come to Life</i></h2>
+					</header>
+				</div>
+				<button id ="postBtn" type="button" class="fa fa-plus-square" data-toggle="modal" data-target="#postModal"></button> <!-- Add post button -->
+
+			<!-- Post Idea Modal Popup -->
+			  	<div id="postModal" class="modal">
+
+				    <!-- Modal content -->
+				    <div class="modal-content">
+					    <div class="modal-header">
+					        <h2>Add an Idea!</h2>
+					    </div>
+					    <div class="modal-body">
+					        <center>
+						        <p>Title</p>
+						        <input id = "titleInput" type="text" class="descriptionInputs" placeholder="Add Your Idea Title (2 - 10 Words)">
+						        <p>Description</p>
+						        <textarea id = "descriptionInput" class="descriptionInputs" cols="40" rows="4" placeholder= "Give a more detailed overview of your idea (50 - 150 words)"></textarea>
+						        <p>Target Audience</p>
+						        <input id = "audienceInput" type="text" class="descriptionInputs" placeholder= "Who is your target audience? (1 - 8 Words)">
+						        <p>Importance</p>
+						        <textarea id = "importanceInput" class="descriptionInputs" cols="40" rows="2" placeholder= "Why is your idea important? (15 - 50 Words)"></textarea>
+						        <p class="break"><br></p>
+					    	</center>
+					    </div>
+					    <div class="modal-footer">
+					        <h3>Attach an Image:</h3>
+					        <input id="imageInput" type="text" class="imageInsert" placeholder="Image URL">
+					        <input id="submit" class="submit" type="submit" value="Submit" onclick="addData()">
+					    </div>
+				    </div>
+				</div>
+			 <!-- End Post Idea Modal -->
+
+			</section>
+
+		<!-- Main Area - Post Area -->
+			<div>
+				<button id ="likesSortBtn" type="button" class="likesButton" onclick="likesSort();"> Sort by Likes</button> <!-- Add post button -->
+				<button class="hiddenButton" id = "refresh" onClick="window.location.reload();">Refresh the Page to see New Changes <i class="fa fa-refresh" style = "font-size: 70px;" aria-hidden="true"></i> </button>
+				<div class="inner">
+
+				<!-- Posts -->
+					<div class="thumbnails" id="postSection">
+					</div>
+				</div>
+			</div>
+
+		<!-- Footer -->
+			<footer id="footer">
+				<div class="inner">
+				</div>
+			</footer>
+
+		<script>
+
+		//code for displaying "Add Idea" Modal Popup
+
+		var postIdea = document.getElementById("postModal"); // Get the modal
+
+		var btn = document.getElementById("postBtn"); // Get the button that opens the modal
+
+		btn.onclick = function() { // When the user clicks the button, open the modal 
+		  postIdea.style.display = "block";
+		}
+
+		window.onclick = function(event) { // When the user clicks anywhere outside of the modal, close it
+		  if (event.target == postModal) {
+		    postIdea.style.display = "none";
+		  }
+		}
+
+
+		//Firebase code
+
+		var config = 
+            {
+                apiKey: "AIzaSyCgoPa8X6juYqo-hguA-bFxHpZNWMlDVeM",
+			    authDomain: "ideanetbydaveyseeman.firebaseapp.com",
+			    databaseURL: "https://ideanetbydaveyseeman-default-rtdb.firebaseio.com",
+			    projectId: "ideanetbydaveyseeman",
+			    storageBucket: "ideanetbydaveyseeman.appspot.com",
+			    messagingSenderId: "265128709776",
+			    appId: "1:265128709776:web:97a62d1a6970653dc1d215",
+			    measurementId: "G-5R2GXVK9FV"
+            };
+    
+        firebase.initializeApp(config);
+        var database = firebase.database();
+        var ref = database.ref("Ideas");
+        ref.once("value", gotList, errData);
+
+        ideaNumber = 0; //this variable will be used for indexing
+        orderedByDate = []; //It saves many lines of code to make this global as I need to use it in multiple functions
+
+        function gotList(data) //shows all the ideas on the browsing feed
+        {
+                allData = data.val();
+                keyValues = Object.keys(allData);
+
+                for (i=0; i < keyValues.length;i++) //this will draw all the posts in the database, if my website gets too many posts I could change this number (keyValues.length) to only show some of them.
+                {
+                    ref = database.ref("Ideas/" + keyValues[i]);
+                    ref.once("value", gotData, errData);
+                }
+        }
+
+        function gotData(data)
+        {	
+            	ideaNumber++;
+                fullData = data.val();
+                showPost(fullData);
+                orderedByDate.push(fullData);
+        }
+    
+        function errData(err)
+        {
+            console.log("Error!")
+            console.log(err)
+      	}
+
+        function showPost (fullData)
+        {
+         	browsingData = [fullData.title, fullData.description, fullData.imageURL, fullData.likes]; //data that is shown on the browsing page.
+            if (browsingData[1].length > 120) {
+            	browsingData[1] = browsingData[1].substring(0, 120) + "..."; //limit # of characters on browsing page description
+            };
+            postDisplay = document.getElementById("postSection");
+
+            //create post:
+
+            postButton = document.createElement("button"); //button that opens idea description page (the button is the entire post)
+            postButton.className = "openBtn";
+            postButton.setAttribute("id", "desBtn");
+            postButton.setAttribute("data-toggle", "modal");
+            postButton.setAttribute("data-target", "#descriptionPage" + ideaNumber);
+
+            postBox = document.createElement("div");
+            postBox.className = "box"; 
+
+            //contents of post:
+
+            postImage = document.createElement("img");
+            postImage.setAttribute("alt", "");
+            postImage.setAttribute("src", browsingData[2]);
+			postImage.className = "image-fit";
+			postBox.appendChild(postImage);
+
+			heartIcon = document.createElement("i"); //likes displayed on each post when hovered over
+			heartIcon.className = "fa fa-heart"; //turn into icon class
+			postBox.appendChild(heartIcon);
+			likes = document.createElement("p");
+			likes.appendChild(document.createTextNode(browsingData[3])) //you need to put this text in a <p> because text nodes cannot be styled on their own
+			likes.className = "likesTxt";
+			postBox.appendChild(likes);
+
+
+			innerText = document.createElement("div"); //div that stores title and description text
+			title = document.createElement("h3");
+			title.className = "postTitle";
+			title.appendChild(document.createTextNode(browsingData[0]))
+			innerText.appendChild(title);
+			description = document.createElement("p");
+			description.appendChild(document.createTextNode(browsingData[1]))
+			description.className = "postDesTeaser";
+			innerText.appendChild(description);
+			innerText.style.transform = "translate(0px,-140px)"; 
+			postBox.appendChild(innerText); //adds idea and description text to post box
+
+			postButton.appendChild(postBox);
+			postDisplay.appendChild(postButton); //a new post has just been added
+
+
+			//creating contents on the idea description page:
+
+			descriptionData = [fullData.title, fullData.description, fullData.targetAudience, fullData.importance, fullData.imageURL, fullData.likes, fullData.comments]; //data that is shown on the idea description page.
+
+			page = document.createElement("div");
+			page.setAttribute("id", "descriptionPage" + ideaNumber); //index each idea description page
+			page.className = "description-modal";
+
+			content = document.createElement("div");
+			content.className = "description-content";
+			page.appendChild(content);
+
+			header = document.createElement("div");
+			header.className = "description-header";
+			content.appendChild(header);
+
+			titleText = document.createElement("p");
+			titleText.appendChild(document.createTextNode(descriptionData[0]));
+			header.appendChild(titleText);
+			likesIcon = document.createElement("i");
+			likesIcon.className = "fa fa-heart";
+			likesIcon.style.visibility = "visible";
+			likesIcon.setAttribute("onclick","addLike();")
+			header.appendChild(likesIcon);
+			likesText = document.createElement("p");
+			likesText.className = "likes-number";
+			likesText.appendChild(document.createTextNode(descriptionData[5]));
+			header.appendChild(likesText);
+
+			body = document.createElement("div");
+			body.className = "description-body";
+
+			descriptionTitle = document.createElement("p");
+			descriptionTitle.appendChild(document.createTextNode("Description"));
+			body.appendChild(descriptionTitle);
+			descriptionText = document.createElement("h5");
+			descriptionText.appendChild(document.createTextNode(descriptionData[1]));
+			body.appendChild(descriptionText);
+
+			audienceTitle = document.createElement("p");
+			audienceTitle.appendChild(document.createTextNode("Target Audience"));
+			body.appendChild(audienceTitle);
+			audienceText = document.createElement("h5");
+			audienceText.appendChild(document.createTextNode(descriptionData[2]));
+			body.appendChild(audienceText);
+
+
+			importanceTitle = document.createElement("p");
+			importanceTitle.appendChild(document.createTextNode("Importance"));
+			body.appendChild(importanceTitle);
+			importanceText = document.createElement("h5");
+			importanceText.appendChild(document.createTextNode(descriptionData[3]));
+			body.appendChild(importanceText);
+			body.appendChild(document.createElement("br"));
+
+			image = document.createElement("img");
+			image.setAttribute("src", descriptionData[4]);
+			image.className = "description-image";
+			body.appendChild(image);
+
+			commentSec = document.createElement("div");
+			body.appendChild(commentSec);
+			commentTitle = document.createElement("p");
+			commentTitle.appendChild(document.createTextNode("Comments"));
+			commentTitle.className = "comment-title";
+			commentSec.appendChild(commentTitle);
+			content.appendChild(body);
+
+			footer = document.createElement("div");
+			footer.class = "insertComment";
+
+			inputCom = document.createElement("input");
+			inputCom.className = "commentInput";
+			inputCom.setAttribute("type", "text");
+			inputCom.setAttribute("id", "commentTxt");
+			inputCom.setAttribute("placeholder", "Add a comment...");
+			footer.appendChild(inputCom);
+			submitBtn = document.createElement("submit");
+			submitBtn.className = "commentSubmit";
+			submitBtn.setAttribute("id", "comment");
+			footer.appendChild(submitBtn);
+			submitIcon = document.createElement("i")
+			submitIcon.className = "fa fa-paper-plane";
+			submitBtn.appendChild(submitIcon);
+			submitBtn.setAttribute("onclick", "addComment()");
+
+			page.append(footer);
+
+			postDisplay.appendChild(page);
+        };
+
+         function addData() //adds new idea to the database or adds comment
+      	 {
+        	tit = document.getElementById("titleInput").value;
+        	des = document.getElementById("descriptionInput").value;
+        	aud = document.getElementById("audienceInput").value;
+        	imp = document.getElementById("importanceInput").value;
+        	img = document.getElementById("imageInput").value;
+
+        	if(tit.length > 0 && des.length > 0 && aud.length > 0 && imp.length > 0 && img.length > 0){  //only execute if all input boxes are full in idea submit page
+	        	ideaNumber++;
+	        	var data = //Idea data
+	                {
+	                    title: tit,
+	                    description: des,
+	                    targetAudience: aud,
+	                    importance: imp,
+	                    imageURL: img,
+	                    likes: 0,
+	                    commentNumber: 0,
+	                    comments: 0
+	                }
+	            var ref = database.ref('Ideas');
+	            ref.child('Idea' + ideaNumber).set(data);
+
+	            postModal.style.display = "none";
+            	document.getElementById("refresh").style.visibility = "visible";
+
+            } else {
+
+            	alert("Please input in all fields");
+
+            }
+
+       	}
+
+
+        function likesSort (){
+        	orderedByLikes = orderedByDate.sort(function(a,b) {return b.likes - a.likes}) //sorts by like #
+        	document.getElementById("postSection").innerHTML = "";
+        	ideaNumber = 0;
+        	for (var i = 0; i < orderedByLikes.length; i++) {
+        		showPost(orderedByLikes[i]);
+        	}
+        }
+
+        /*function addLike(){
+
+		  // Get a key for a new Post.
+		  var newUpdateKey = database.ref("Ideas/Idea5").child('likes').push().key;
+
+		  console.log(newUpdateKey)
+
+		  // Write the new post's data simultaneously in the posts list and the user's post list.
+		  var updates = {};
+		  updates['/posts/' + 24] = data;
+
+		  database.ref().update(updates);
+		}*/
+
+		function addComment(){
+
+            /*updateNum = database.ref("Ideas/Idea" + ideaNumber);
+            updateNum.child("/commentNumber"). */
+	       //updateComment.child("commentNumber").set(com);
+
+           com = document.getElementById("commentTxt").value;
+           updateKey = database.ref("Ideas/Idea" + ideaNumber + "/comments") //since this would only be called after all the posts were made, ideaNumber is at the max so comments can only be added to the last post.
+
+           //also it overwrites data instead of adding it.
+	       updateKey.child("comment").set(com);
+		}
+
+		</script>
+			
+
+	</body>
+</html>
