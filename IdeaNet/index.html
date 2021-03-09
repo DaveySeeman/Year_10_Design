@@ -123,7 +123,7 @@
         var ref = database.ref("Ideas");
         ref.once("value", gotList, errData);
 
-        ideaNumber = 0; //this variable will be used for indexing
+        ideas = [];
         orderedByDate = []; //It saves many lines of code to make this global as I need to use it in multiple functions
 
         function gotList(data) //shows all the ideas on the browsing feed
@@ -136,14 +136,15 @@
                     ref = database.ref("Ideas/" + keyValues[i]);
                     ref.once("value", gotData, errData);
                 }
+                console.log(ideas)
         }
 
         function gotData(data)
         {	
-            	ideaNumber++;
-                fullData = data.val();
-                showPost(fullData);
-                orderedByDate.push(fullData);
+            fullData = data.val();
+            ideas.push(fullData);
+            showPost(fullData);
+            orderedByDate.push(fullData);
         }
     
         function errData(err)
@@ -166,7 +167,8 @@
             postButton.className = "openBtn";
             postButton.setAttribute("id", "desBtn");
             postButton.setAttribute("data-toggle", "modal");
-            postButton.setAttribute("data-target", "#descriptionPage" + ideaNumber);
+            postButton.setAttribute("onclick", "document.getElementById('postSection').removeChild('desBtn')");
+            postButton.setAttribute("data-target", "#descriptionPage" + ideas.length);
 
             postBox = document.createElement("div");
             postBox.className = "box"; 
@@ -209,7 +211,7 @@
 			descriptionData = [fullData.title, fullData.description, fullData.targetAudience, fullData.importance, fullData.imageURL, fullData.likes, fullData.comments]; //data that is shown on the idea description page.
 
 			page = document.createElement("div");
-			page.setAttribute("id", "descriptionPage" + ideaNumber); //index each idea description page
+			page.setAttribute("id", "descriptionPage" + ideas.length); //index each idea description page
 			page.className = "description-modal";
 
 			content = document.createElement("div");
@@ -283,12 +285,15 @@
 			footer.appendChild(inputCom);
 			submitBtn = document.createElement("submit");
 			submitBtn.className = "commentSubmit";
-			submitBtn.setAttribute("id", "comment");
 			footer.appendChild(submitBtn);
 			submitIcon = document.createElement("i")
 			submitIcon.className = "fa fa-paper-plane";
+
+			submitBtn.setAttribute("id", "commentSection" + ideas.length);
+			submitBtn.setAttribute("value", ideas.length);
+
 			submitBtn.appendChild(submitIcon);
-			submitBtn.setAttribute("onclick", "addComment()");
+			submitBtn.setAttribute("onclick", "add");
 
 			page.append(footer);
 
@@ -304,7 +309,6 @@
         	img = document.getElementById("imageInput").value;
 
         	if(tit.length > 0 && des.length > 0 && aud.length > 0 && imp.length > 0 && img.length > 0){  //only execute if all input boxes are full in idea submit page
-	        	ideaNumber++;
 	        	var data = //Idea data
 	                {
 	                    title: tit,
@@ -316,6 +320,7 @@
 	                    commentNumber: 0,
 	                    comments: 0
 	                }
+	            ideas.push(data);
 	            var ref = database.ref('Ideas');
 	            ref.child('Idea' + ideaNumber).set(data);
 
@@ -364,7 +369,7 @@
            updateKey = database.ref("Ideas/Idea" + ideaNumber + "/comments") //since this would only be called after all the posts were made, ideaNumber is at the max so comments can only be added to the last post.
 
            //also it overwrites data instead of adding it.
-	       updateKey.child("comment").set(com);
+	       updateKey.push(com);
 		}
 
 		</script>
