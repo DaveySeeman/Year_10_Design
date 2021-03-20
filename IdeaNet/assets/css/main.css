@@ -27,6 +27,7 @@
 
 	body {
 		-ms-overflow-style: scrollbar;
+		overflow-x: hidden;
 	}
 
 	@media screen and (max-width: 480px) {
@@ -61,43 +62,133 @@
 
 /* Header */
 
+
 	.header h1 {
-			font-size: 2.8em;
-			font-family: "Lucida Console", "Courier New", monospace;
-			color: black;
+		font-size: 2.8em;
+		font-family: "Lucida Console", "Courier New", monospace;
+		color: black;
+		transform: translate(-10px,-7px);
+		width: 105%;
+		height: 70px;
+		background: slategrey;
+		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.4);
+		width: 105%
 	}
 	.header h2 {
-			position: absolute; 
-			transform: translate(540px);
-			font-family: "Lucida Console", "Courier New", monospace;
+		position: absolute; 
+		transform: translate(540px,-20px);
+		font-family: "Lucida Console", "Courier New", monospace;
 	}
 	.header button { /* add post icon */
-			font-size: 4.2em;
-			float: right;
-			color: green;
-			transform: translate(-50px,-110px);
-			border-radius: 10px;
-			border: none;
-			outline: 0; /* gets rid of blue box around button border that weirdly appears after clicking on it */
-			background: transparent;
-			cursor: pointer;
+		font-size: 4.2em;
+		float: right;
+		color: lightgreen;
+		transform: translate(-120px,-20px);
+		border-radius: 10px;
+		border: none;
+		outline: 0; /* gets rid of blue box around button border that appears after clicking on it */
+		background: transparent;
+		cursor: pointer;
 	}
 
-/* See new post button style */
-	.likesButton{
-		width: 150px;
-		position: absolute;
-		height: 60px;
-		color: lime;
-		font-size: 25px;
-		font-family: "Lucida Console", "Courier New", monospace;
-		background: salmon;
-		border: none;
-		border-radius: 5px;
-		left:100px;
-		top: 50px;
-		outline: 0;
+/* "sort by" dropdown style */
+
+	.sortbtn {
+	  background-color: #4CAF50;
+	  color: white;
+	  padding: 16px;
+	  font-size: 16px;
+	  border: none;
+	  border-radius: 20px;
+	  outline: 0;
 	}
+
+	.sort-dropdown {
+	  position: absolute;
+	  display: inline-block;
+	  transform: translate(140px,-105px);
+	}
+
+	.sort-content {
+	  display: none;
+	  position: absolute;
+	  z-index: 1;
+	}
+
+	.sort-content button {
+	  padding: 12px 16px;
+	  background-color: rgba(51, 170, 51);
+	  text-decoration: none;
+	  display: block;
+	  color: white;
+	  border-radius: 20px;
+	  margin: 0 auto;
+	  margin-bottom: -20px;
+	  outline: 0;
+	  transform: translate(10px,-20px);
+	}
+
+	.sort-content button:hover {background-color: lime;}
+
+	.sort-dropdown:hover .sort-content {display: block;}
+
+	.sort-dropdown:hover .sortbtn {background-color: #3e8e41;}
+
+/* "search tags" dropdown style that appears as users type in tags */
+
+	.drop-inpt {
+	  color: green;
+	  font-weight: bolder;
+	  padding: 16px;
+	  font-size: 16px;
+	  border: none;
+	  cursor: text;
+	  outline: 0;
+	  border-bottom: 1px solid grey;
+	  width: 280px;
+	  border-radius: 10px;
+	}
+
+	.tags-drp {
+	  position: relative;
+	  display: inline-block;
+	  transform: translate(975px,-110px);
+	}
+
+	.tagsdrp-content {
+	  display: none;
+	  background-color: #f9f9f9;
+	  width: 280px;
+	  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	}
+
+	.tagsdrp-content button {
+	  color: black;
+	  padding: 12px 16px;
+	  position: relative;
+	  z-index: 1;
+	  text-decoration: none;
+	  display: block;
+	  width: 280px;
+	  border: none;
+	}
+
+	.tagsdrp-content button:hover {background-color: lightgrey; cursor: pointer;}
+
+	.clearTags{
+	  background-color: #4CAF50;
+	  color: white;
+	  padding: 16px;
+	  font-size: 16px;
+	  border: none;
+	  border-radius: 20px;
+	  outline: 0;
+	  cursor: pointer;
+	  position: absolute;
+	  transform: translate(1000px,-105px);
+	}
+
+/* "refresh page to see new changes" button style */
 
 	.hiddenButton{
 		font-size: 1.2em;
@@ -106,13 +197,15 @@
 		border-radius: 10px;
 		border: none;
 		cursor: pointer;
+		position: relative;
 		width:150px;
-		transform: translate(30px,-120px);
+		left: -260px;
+		top: -120px;
 		visibility: hidden;
 		outline: 0;
 	}
 
-/* post box organization */
+/* post box */
 
 	.thumbnails {
 		display: -moz-flex;
@@ -131,28 +224,29 @@
 		-webkit-flex-wrap: wrap;
 		-ms-flex-wrap: wrap;
 		flex-wrap: wrap;
+		transform: translate(0px,-100px);
 	}
 
 	.thumbnails .box { /* Post Box Styling */
-			margin: 2em 2em 2em 2em;
-			padding-bottom: 20px;
-			width: 300px;
-			height: 350px;
-			background: white;
-			transition: opacity 0.2s ease; /* When opacity of posts changes on mouse hover, it will ease in */
-			text-align: center;
+		margin: 2em 2em 2em 2em;
+		padding-bottom: 20px;
+		width: 300px;
+		height: 350px;
+		background: white;
+		transition: opacity 0.2s ease; /* When opacity of posts changes on mouse hover, it will ease in */
+		text-align: center;
 	}
 
 	.thumbnails .openBtn { /* Post Box Styling */
-			margin: 2em 2em 2em;
-			background: white;
-			transition: opacity 0.2s ease; /* When opacity of posts changes on mouse hover, it will ease in */
-			text-align: center;
-			border: none;
-			cursor: pointer;
-			outline: none;
-			font-family: "Source Sans Pro", sans-serif;
-			padding: -50px;
+		margin: 2em 2em 2em;
+		background: white;
+		transition: opacity 0.2s ease; /* When opacity of posts changes on mouse hover, it will ease in */
+		text-align: center;
+		border: none;
+		cursor: pointer;
+		outline: none;
+		font-family: "Source Sans Pro", sans-serif;
+		padding: -50px;
 	}
 
 	.thumbnails a{
@@ -168,12 +262,29 @@
 		color: red;
 		font-size: 35px;
 		transform: translate(-35px,-50px);
+		cursor: pointer;
 	}
 
 	.likesTxt{
 		visibility: hidden;
 		transform: translate(20px,-112px);
 		font-size: 30px;
+	}
+
+	.fa-tags{ /* tags icon style */
+		color: lightblue;
+		font-size: 35px;
+		position: absolute;
+		top:3%;
+		left: 2%;
+	}
+
+	.tagsTxt{ /* tags icon style */
+		color: black;
+		font-family: "Source Sans Pro", sans-serif;
+		position: absolute;
+		top: -1%;
+		left: 6%;
 	}
 
 	.box:hover{
@@ -207,7 +318,7 @@
 
 	.image-fit {
 		width: 100%;
-		height: 60%
+		height: 60%;
 	}
 
 /* Add Post Modal Popup */
@@ -217,7 +328,7 @@
 	.modal {
 	  display: none; /* Hidden by default */
 	  position: fixed; /* Stay in place */
-	  z-index: 1; /* Sit on top */
+	  z-index: 2; /* Sit on top */
 	  padding-top: 100px; /* Location of the box */
 	  left: 0;
 	  top: -70px;
@@ -247,6 +358,7 @@
 		width: 75%;
 		font-size: 18px;
 		padding-bottom: -10px;
+		outline: 0;
 	}
 
 	.modal .imageInsert{
@@ -254,11 +366,26 @@
 		font-size: 18px;
 		border-radius: 5px;
 		border: none;
+		outline: 0;
+	}
+
+	.modal .tagInput{
+		transform: translate(165px,-56px);
+		font-size: 18px;
+		border-radius: 5px;
+		width: 290px;
+		border: none;
+		outline: 0;
 	}
 
 	/* Add Animation */
 	@-webkit-keyframes animatetop {
 	  from {top:-300px; opacity:0} 
+	  to {top:0; opacity:1} 
+	}
+
+	@keyframes animatetop {
+	  from {top:-300px; opacity:0}
 	  to {top:0; opacity:1}
 	}
 
@@ -303,6 +430,35 @@
 		transform: translate(0,-52px);
 	}
 
+	/* Styling for tooltip when inputting tags (it says "tags are separeted by spaces") */
+
+	.tooltip {
+	  position: relative;
+	  display: inline-block;
+	  border-bottom: 1px dotted black;
+	}
+
+	.tooltip .tooltiptext {
+	  visibility: hidden;
+	  width: 200px;
+	  background-color: dimgrey;
+	  color: #fff;
+	  text-align: center;
+	  border-radius: 6px;
+	  padding: 5px 0;
+	  
+	  /* Position the tooltip */
+	  position: absolute;
+	  z-index: 1;
+	  bottom: 300%;
+	  left: 93%;
+	  margin-left: -60px;
+	}
+
+	.tooltip:hover .tooltiptext {
+	  visibility: visible;
+	}
+
 	
 
 /* Description Page Styling */
@@ -310,20 +466,22 @@
 	.description-modal{
 		display: none; /* Hidden by default */
 		position: fixed; /* Stay in place */
-		z-index: 1; /* Sit on top */
+		z-index: 2;
 		padding-top: 100px; /* Location of the box */
 		left: 0;
 		top: -70px;
-		width: 100%; /* Full width */
-		height: 120%; /* Full height */
+		width: 105%; /* Full width */
+		height: 180%; /* Full height */
 		overflow: auto; /* Enable scroll if needed */
 		background-color: rgb(0,0,0); /* Fallback color */
 		background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 		font-size: 16px;
+		transform: translate(-12px,-150px);
 	}
 
 	.description-content {
 	  position: relative;
+	  z-index: 1;
 	  background-color: #fefefe;
 	  margin: auto;
 	  border: 1px solid #888;
@@ -332,7 +490,7 @@
 	  -webkit-animation-name: animatetop;
 	  -webkit-animation-duration: 0.4s;
 	  animation-name: animatetop;
-	  animation-duration: 0.4s
+	  animation-duration: 0.4s;
 	}
 
 	.description-header{
@@ -382,12 +540,35 @@
 		border-radius: 30px;
 	}
 
-	.comment-title{
+	.fa-exclamation-triangle{
+		color: maroon;
+		transform: translate(10%,50%);
+		opacity: 0.7;
+		cursor: pointer;
+	}
+
+	.comment-section{
 		margin: 0 auto;
 		position: absolute;
 		top: 70px;
-		left: 81%;
-		text-align: right;
+		left: 70%;
+		width: 28%;
+		height: 72%;
+		overflow: scroll;
+	}
+
+	.comment-title{
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	.idea-comments{
+		margin: 0 auto;
+		text-align: center;
+		transform: translate(0,80%);
+		padding-bottom: 15px;
+		font-style: italic;
+		color: dimgrey;
 	}
 
 	.insertComment{
@@ -407,23 +588,43 @@
 	}
 
 	.commentSubmit{
+		position: relative;
 		border-radius: 15px;
 		border: none;
 		color: green;
-		width: 40px;
-		padding: 5px;
 		font-size: 30px;
 		outline: 0;
-		transform: translate(15px,5px);
+		left: 955px;
+		top: 10px;
 		cursor: pointer;
+	}
+
+
+	.commentSubmit:after {
+	   content: "";
+	   background: #f1f1f1;
+	   display: block;
+	   position: absolute;
+	   border-radius: 40px;
+	   padding-top: 100%;
+	   padding-left: 100%;
+	   margin-left: -5px !important;
+	   margin-right: -5px;
+	   margin-top: -120%;
+	   opacity: 0;
+	   transition: all 0.8s
+	}
+
+	.commentSubmit:active:after {
+	   padding: 0;
+	   margin: 0;
+	   opacity: 1;
+	   transition: 0s;
+	   color: black;
 	}
 
 	.fa-paper-plane{
 		font-size: 38px;
-		transform: translate(400px,15px);
 		color: lime;
+		transform: translate(-560px,8px);
 	}
-
-
-
-
