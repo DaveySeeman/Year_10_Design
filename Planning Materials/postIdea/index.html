@@ -18,9 +18,9 @@
     <body>
             <button onclick = "signin()" >Sign In</button>
            
-            <input type="text" id="student" value="Enter Idea">
-            <input type="text" id="subject" value="Enter Description">
-            <input type="text" id="mark" value="Enter # of Likes">
+            <input type="text" id="idea" value="Enter Idea">
+            <input type="text" id="description" value="Enter Description">
+            <input type="text" id="likes" value="Enter # of Likes">
 
             <button onclick = "setData()">Add Post</button>
             <button onclick = "getData()">Show Posts</button>
@@ -69,7 +69,7 @@
             } 
             else 
             {
-                userId = user.uid; // you can also get .displayName, .photoURL, .email
+                userId = user.uid; // you can also get .displaytitle, .photoURL, .email
                 document.getElementById("uid").innerHTML = userId; // display Google uid on page
                 
             } // end user null check
@@ -93,20 +93,20 @@
             // Create a database object that we can refer to
             var database = firebase.database();
 
-            // Create a reference to a particular location or "node" called StudentInfo
-            var ref = database.ref('StudentInfo');
+            // Create a reference to a particular location or "node" called ideaInfo
+            var ref = database.ref('ideaInfo');
 
-            // Grab the Name, Subject, and Grade obtained from the HTML frontend textboxes
-            var sname = document.getElementById("student").value;
-            var ssubject = document.getElementById("subject").value;
-            var smark = document.getElementById("mark").value;
+            // Grab the title, description, and Grade obtained from the HTML frontend textboxes
+            var stitle = document.getElementById("idea").value;
+            var sdescription = document.getElementById("description").value;
+            var slikes = document.getElementById("likes").value;
             
             // Create a JSON object to add to the database with user-inputted data
             var data = 
             {
-                name: sname,
-                subject: ssubject,
-                mark: smark
+                title: stitle,
+                description: sdescription,
+                likes: slikes
             }
             // "PUSH" means we add something to the database
             ref.push(data);
@@ -119,8 +119,8 @@
             var database = firebase.database();
 
             // Create a reference to a particular location or "node"
-            // 'StudentInfo'is the name of the main branch in the database
-            var ref = database.ref('StudentInfo');
+            // 'ideaInfo'is the title of the main branch in the database
+            var ref = database.ref('ideaInfo');
 
             // we will make reference to each 'value' of a database object which will have 
             // two helper functions latched "on" to it to perform additional tasks 
@@ -138,8 +138,8 @@
             document.getElementById("posts").innerHTML = "";
             
             // collect all of the unique objects ('keys' or id's) out of the database
-            var studentData = data.val(); // access the data 'value' of each 'object' 
-            var keys = Object.keys(studentData);
+            var ideaData = data.val(); // access the data 'value' of each 'object' 
+            var keys = Object.keys(ideaData);
             console.log(keys);
 
             // iterate through the unique object id's and grab data fields
@@ -148,15 +148,15 @@
 
               var idea = document.createElement('center');
               ideaText = idea.appendChild(document.createElement('p'));
-              ideaText.appendChild(document.createTextNode(studentData[k].name));
+              ideaText.appendChild(document.createTextNode(ideaData[k].title));
               ideaText.style.fontSize = "20px";
 
               var description = document.createElement('p')
-              description.appendChild(document.createTextNode("Description: " + studentData[k].subject));
+              description.appendChild(document.createTextNode("Description: " + ideaData[k].description));
               description.style.fontSize = "15px";
 
               var likes = document.createElement('p')
-              likes.appendChild(document.createTextNode("Likes: " + studentData[k].mark));
+              likes.appendChild(document.createTextNode("Likes: " + ideaData[k].likes));
               likes.style.color = "darkred";
 
               var postInfo = document.getElementById('posts');
