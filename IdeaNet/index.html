@@ -1,5 +1,6 @@
+
 <!--
-	Template called Full Motion by TEMPLATED
+	Original Template called Full Motion by TEMPLATED
 	templated.co @templatedco
 	Released for free under the Creative Commons Attribution 3.0 license (templated.co/license)
 -->
@@ -20,6 +21,8 @@
         <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-database.js"></script>
         <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src = "posting.js"></script>
+        <script src = "sorting.js"></script>
 
 	</head>
 	<body id="top" onclick = "hideSuggested();">
@@ -92,9 +95,9 @@
 				  <div class="tagsdrp-content" id = "suggestions"></div>
 				</div>
 
-				<button class = "clearTags" onclick = "ref.once('value', gotList, errData);">Clear Tags <i class="fa fa-trash" aria-hidden="true"></i> </button>
+				<button class = "clearTags" onClick = "window.location.reload();"> Clear Tags <i class="fa fa-trash" aria-hidden="true"></i> </button>
 
-				<button class="hiddenButton" id = "refresh" onClick="window.location.reload();"> Refresh the Page to see New Changes <i class="fa fa-refresh" style = "font-size: 70px;" aria-hidden="true"></i> </button>
+				<button class="refreshButton" id = "refresh" onClick="window.location.reload();"> New Set of Ideas <i class="fa fa-refresh" style = "font-size: 35px;" aria-hidden="true"></i> </button>
 				<div class="inner">
 
 				<!-- Posts -->
@@ -126,242 +129,21 @@
         firebase.initializeApp(config);
         var database = firebase.database();
         var ref = database.ref("Ideas");
-        ref.once("value", gotList, errData);
+        ref.once("value", gotList, errData); //inital display of posts - all posting functions on posting.js file
 
-        ideaNumber = counter = 0;
-        likedAlrdy = reportedAlrdy = false;
-        dataHold = {}; //it saves many lines of code to make this global
-
-        function gotList(data) //shows all the ideas on the browsing feed
-        {	
-        	postDisplay = document.getElementById("postSection").innerHTML = ""; //clear all posts (useful for when function is recalled in "clear tags" button)
-
-            allData = dataHold = data.val() //val function turns data into dictionary
-
-            keyValues = Object.keys(allData);  
-
-            for (i = 0; i < keyValues.length; i++) //this will draw all the posts in the database, if my website gets too many posts I could change this number (keyValues.length) to only show some of them
-            {
-                databaseIdeas = database.ref("Ideas/" + keyValues[i]);
-                databaseIdeas.once("value", gotData, errData);
-            }
-        }
-
-        function gotData(data)
-        {	
-            fullData = data.val();
-	     
-	        showPost(fullData)
-        }
-    
-        function errData(err)
-        {
-            console.log("Error!")
-            console.log(err)
-      	}
-
-        function showPost (fullData)
-        {
-        	ideaNumber ++;
-
-         	browsingData = [fullData.title, fullData.description, fullData.imageURL, fullData.likes]; //data that is shown on the browsing page
-            if (browsingData[1].length > 120) {
-            	browsingData[1] = browsingData[1].substring(0, 120) + "..."; //limit # of characters on browsing page description
-            };
-
-            postDisplay = document.getElementById("postSection");
-
-            //create post:
-
-            postButton = document.createElement("button"); //button that opens idea description page (the button is the entire post)
-            postButton.className = "openBtn";
-            postButton.setAttribute("id", "desBtn" + ideaNumber);
-            postButton.setAttribute("data-toggle", "modal");
-            postButton.setAttribute("data-target", "#descriptionPage" + ideaNumber);
-            postButton.setAttribute("onclick", "(function (){likedAlrdy = reportedAlrdy = false;  window.scrollTo(0, 0);})()");
-
-            postBox = document.createElement("div");
-            postBox.className = "box"; 
-
-            //contents of post:
-
-            postImage = document.createElement("img");
-            postImage.setAttribute("alt", "");
-            postImage.setAttribute("src", browsingData[2]);
-			postImage.className = "image-fit";
-			postBox.appendChild(postImage);
-
-			heartIcon = document.createElement("i"); //likes displayed on each post when hovered over
-			heartIcon.className = "fa fa-heart"; //turn into icon class
-			postBox.appendChild(heartIcon);
-			likes = document.createElement("p");
-			likes.setAttribute("id", "likesPost" + ideaNumber);
-			likes.appendChild(document.createTextNode(browsingData[3])) //you need to put this text in a <p> because text nodes cannot be styled on their own
-			likes.className = "likesTxt";
-			postBox.appendChild(likes);
+        reset();
+        oldDataHold = dataHold = {};
 
 
-			innerText = document.createElement("div"); //div that stores title and description text
-			title = document.createElement("h3");
-			title.className = "postTitle";
-			title.appendChild(document.createTextNode(browsingData[0]))
-			innerText.appendChild(title);
-			description = document.createElement("p");
-			description.appendChild(document.createTextNode(browsingData[1]))
-			description.className = "postDesTeaser";
-			innerText.appendChild(description);
-			innerText.style.transform = "translate(0px,-140px)"; 
-			postBox.appendChild(innerText); //adds idea and description text to post box
-
-			postButton.appendChild(postBox);
-			postDisplay.appendChild(postButton); //a new post has just been added
-
-
-			//creating contents on the idea description page:
-
-			descriptionData = [fullData.title, fullData.description, fullData.targetAudience, fullData.importance, fullData.imageURL, fullData.likes, fullData.comments, fullData.tags]; //data that is shown on the idea description page.
-
-			page = document.createElement("div");
-			page.setAttribute("id", "descriptionPage" + ideaNumber); //index each idea description page
-			page.className = "description-modal";
-
-			content = document.createElement("div");
-			content.className = "description-content";
-			page.appendChild(content);
-
-			header = document.createElement("div");
-			header.className = "description-header";
-			content.appendChild(header);
-
-			titleText = document.createElement("p");
-			titleText.appendChild(document.createTextNode(descriptionData[0]));
-			header.appendChild(titleText);
-			likesIcon = document.createElement("i");
-			likesIcon.className = "fa fa-heart";
-			likesIcon.style.visibility = "visible";
-			likesIcon.setAttribute("id","likesOnPost" + ideaNumber);
-			likesIcon.setAttribute("onclick","addLike(this);")
-			header.appendChild(likesIcon);
-			likesText = document.createElement("p");
-			likesText.setAttribute("id", "likesCount" + ideaNumber);
-			likesText.className = "likes-number";
-			likesText.appendChild(document.createTextNode(descriptionData[5]));
-			header.appendChild(likesText);
-
-			body = document.createElement("div");
-			body.className = "description-body";
-
-			descriptionTitle = document.createElement("p");
-			descriptionTitle.appendChild(document.createTextNode("Description"));
-			body.appendChild(descriptionTitle);
-			descriptionText = document.createElement("h5");
-			descriptionText.appendChild(document.createTextNode(descriptionData[1]));
-			body.appendChild(descriptionText);
-
-			audienceTitle = document.createElement("p");
-			audienceTitle.appendChild(document.createTextNode("Target Audience"));
-			body.appendChild(audienceTitle);
-			audienceText = document.createElement("h5");
-			audienceText.appendChild(document.createTextNode(descriptionData[2]));
-			body.appendChild(audienceText);
-
-
-			importanceTitle = document.createElement("p");
-			importanceTitle.appendChild(document.createTextNode("Importance"));
-			body.appendChild(importanceTitle);
-			importanceText = document.createElement("h5");
-			importanceText.appendChild(document.createTextNode(descriptionData[3]));
-			body.appendChild(importanceText);
-			body.appendChild(document.createElement("br"));
-
-			image = document.createElement("img");
-			image.setAttribute("src", descriptionData[4]);
-			image.className = "description-image";
-			body.appendChild(image);
-
-
-			reportBtn = document.createElement("p"); //creating report button
-			reportBtn.className = "fa fa-exclamation-triangle";
-			reportBtn.appendChild(document.createTextNode("Report "));
-			reportBtn.setAttribute("id", "reportButton" + ideaNumber);
-			reportBtn.setAttribute("onclick", "reported(this);");
-			body.appendChild(reportBtn);
-
-			tagsIcon = document.createElement("i"); //add tags to body (not header because it has seperate styling)
-			tagsIcon.className = "fa fa-tags";
-			body.appendChild(tagsIcon);
-			tags = document.createElement("p");
-			tags.className = "tagsTxt";
-
-			tagsText = descriptionData[7].join(", "); //turns list of tags into string w vals separated by commas
-			if  (tagsText.length > 55){
-				tagsText = tagsText.substring(0, 55) + "..."; //limit to only 55 chars to make sure it will fit in the header
-			};
-
-			tags.appendChild(document.createTextNode(tagsText));
-			body.appendChild(tags);
-
-			commentSec = document.createElement("div");
-			commentSec.setAttribute("id", "commentList" + ideaNumber);
-			commentSec.className = "comment-section";
-			body.appendChild(commentSec);
-			commentTitle = document.createElement("p");
-			commentTitle.appendChild(document.createTextNode("Comments"));
-			commentTitle.className = "comment-title";
-			commentSec.appendChild(commentTitle);
-
-			//adding comments to post:
-
-			databaseComments = database.ref("Ideas/" + "Idea" + ideaNumber + "/comments");
-			counter = 0;
-			databaseComments.once("value", gotComments, errData);
-
-			content.appendChild(body);
-
-
-			footer = document.createElement("div");
-			footer.class = "insertComment";
-
-			inputCom = document.createElement("input");
-			inputCom.className = "commentInput";
-			inputCom.setAttribute("type", "text");
-			inputCom.setAttribute("id", "commentTxt" + ideaNumber);
-			inputCom.setAttribute("placeholder", "Add a comment...");
-			footer.appendChild(inputCom);
-			submitBtn = document.createElement("submit");
-			submitBtn.className = "commentSubmit";
-			footer.appendChild(submitBtn);
-			submitIcon = document.createElement("i")
-			submitIcon.className = "fa fa-paper-plane";
-
-			submitBtn.setAttribute("id", "commentSection" + ideaNumber);
-
-			submitBtn.appendChild(submitIcon);
-			submitBtn.setAttribute("onclick", "addComment(this)");
-
-			page.append(footer);
-
-			postDisplay.appendChild(page);
+        function reset(){ //resets variables to be reused in sorting functions
+        	document.getElementById("postSection").innerHTML = "";
+        	ideaNumber = counter = 0;
+	        likedAlrdy = reportedAlrdy = false;
         };
 
-        function gotComments(data){
-        	counter ++;
-			commentData = data.val();
-			allComments = Object.values(commentData);
-
-			ideaComments = document.getElementById("commentList" + counter);
-
-			for (i = 0; i < allComments.length; i++){
-				comment = document.createElement("p");
-				comment.className = "idea-comments";
-				comment.appendChild(document.createTextNode(allComments[i]));
-				ideaComments.appendChild(comment);
-			};
-		};
-
-        function addData() //adds new idea to the database
+        function addData() //adds new idea post to the database
       	{
-      		ideaNumber ++;
+      		ideaNumber = Object.values(oldDataHold).length;
 
         	tit = document.getElementById("titleInput").value;
         	des = document.getElementById("descriptionInput").value;
@@ -374,22 +156,30 @@
         	tagObj = {};
 
         	for (var i = 0; i < tagArr.length; i++){ //contstruct obj containing all inputted tags w each word from input
-        		tagObj[i] = tagArr[i];
+        		if(tagArr[i]){ //only add to database if tag is truthy
+        			tagObj[i] = tagArr[i]; //tag index system may skip values if user inputs multiple spaces in a row, however this does not affect the program
+        		};
         	};
 
-        	if(tit.length > 0 && des.length > 0 && aud.length > 0 && imp.length == 0){  //end function if not all input boxes are full on idea submit page
+        	if(tit.length == 0 || des.length == 0 || aud.length == 0 || imp.length == 0){  //end function if not all input boxes are full on idea submit page
         		alert("Please input in all fields");
             	return;
             };
 
-            fetch(new Request(img, {method: 'HEAD', mode: 'no-cors'}))  //also check if image is valid seperatedly as it is a success criteria
-                .catch(function() { //case where img is invalid
-                    if(confirm("You are sumbitting a post without an image, is that ok?") == false){ //confirmation
-	            			return;
-            	    }
-                });
+            if(tit.split(' ').length > 9) { //check if title is too long (part of success criteria 1)
+            	alert("Your title is too long");
+            	return;
+            };
 
-            //function will continue if url is valid or user clicked "Ok" in response to the invalid image confirmation
+            if (img.match(/\.(jpeg|jpg|gif|png)$/) == null){  //also check if image is invalid seperatedly as it is a success criteria
+
+            	//case where img is invalid
+		        if(confirm("You are sumbitting a post without an image, is that ok?") == false){ //confirmation
+		        		return;
+		    	};
+		    };
+
+            //function will only continue if url is valid or user clicked "Ok" in response to the invalid image confirmation
 
     		var data = //Idea data
 
@@ -405,52 +195,73 @@
                     comments: 0
                 }
 
-            ref.child('Idea' + ideaNumber).set(data);
-
+            ref.child('Idea' + (ideaNumber+1)).set(data);
             postModal.style.display = "none";
-        	document.getElementById("refresh").style.visibility = "visible";
 
-       	}
+            data.tags = tagArr; //for data passed into onscreen addPost function
+
+            alert("Your Idea Has Been Posted... Thank You!");
+            window.location.reload();
+       	};
 
         function addLike(currentPost){
 
-	        counter = currentPost.id.match(/\d+/g)[0]; //regex to grab # from id
+        	try { //postNumber is based on class name IF it was called after a sorting function. Otherwise null
+	   			postNumber = currentPost.className.match(/\d+/g)[0];  //regex to grab # from id
+			} catch { //If addLike is called directly from original posting function
+				postNumber = currentPost.id.match(/\d+/g)[0]; //regex to grab # from id
+			};
 
-			likesNumber = dataHold["Idea" + counter]["likes"]; // retrieve likes to be updated
+			likesNumber = oldDataHold["Idea" + postNumber]["likes"]; // retrieve likes to be updated
 
 			if(likedAlrdy == false){ //check if post has already been liked
 				newLikes = likesNumber + 1; //increment likes by 1
 			} else { 
-				newLikes = likesNumber;
-			}
+				newLikes = likesNumber; //remove like if post has already been liked
+			};
 
 			likedAlrdy = !likedAlrdy; //toggle boolean
 
-			increment = database.ref("Ideas/Idea" + counter);
-			increment.update({likes: newLikes});
+			increment = database.ref("Ideas/Idea" + postNumber);
+			increment.update({likes: newLikes}); //add to firebase
 
-			document.getElementById("likesCount" + counter).innerHTML = newLikes //add 1 to the on screen like count
+			document.getElementById("likesCount" + currentPost.id.match(/\d+/g)[0]).innerHTML = newLikes //add 1 to the on screen like count //use id no matter what for onscreen changes
 
-			document.getElementById("likesPost" + counter).innerHTML = newLikes //add 1 to the browsing page on-hover like count
+			document.getElementById("likesPost" + currentPost.id.match(/\d+/g)[0]).innerHTML = newLikes //add 1 to the browsing page on-hover like count
 		};
 
 		function addComment(currentPost){
 
-		    commentNumber = currentPost.id.match(/\d+/g)[0]; //regex to grab # from id
+			try { //comment section number is based on class name IF it was called after a sorting function. Otherwise null
+	   			commentNumber = currentPost.className.match(/\d+/g)[0];  //regex to grab # from id
+			} catch { //If addLike is called directly from original posting function
+				commentNumber = currentPost.id.match(/\d+/g)[0]; //regex to grab # from id
+			};
+
             comment = document.getElementById("commentTxt" + commentNumber).value;
 
-            if(comment.length > 0){
+            if(comment.length){
 
-	           updateKey = database.ref("Ideas/Idea" + commentNumber + "/comments");
+		        onScreenComments = document.getElementById("commentList" + commentNumber);
+
+		        commentEntry = document.createElement("p");
+			    commentEntry.className = "idea-comments";
+			    commentEntry.appendChild(document.createTextNode(comment));
+
+		        onScreenComments.appendChild(commentEntry); //add comment onscreen
+
+				//add <br> line breaks to comment based on how many lines comment is to avoid overlap over other comments
+
+				if (comment.length > 45){ //there are approximately 45 characters in a line
+					approxLineNumber = String(comment.length/45).charAt(0);
+					linebreak = document.createElement("br");
+					for (j = 0; j < approxLineNumber; j++){
+						onScreenComments.appendChild(linebreak); //add line break approxLineNumber times
+					};
+				};
+
+			   updateKey = database.ref("Ideas/Idea" + commentNumber + "/comments");
 		       updateKey.push(comment); //add to database
-
-		       onScreenComments = document.getElementById("commentList" + commentNumber);
-
-		       commentEntry = document.createElement("p");
-			   commentEntry.className = "idea-comments";
-			   commentEntry.appendChild(document.createTextNode(comment));
-
-		       onScreenComments.appendChild(commentEntry); //add comment onscreen
 
 	  		} else {
 
@@ -459,13 +270,11 @@
 	  		};
 		};
 
-		function reported(currentPost){
+		function reported(currentPost){ //adds report to database
 
-        	counter = currentPost.id.match(/\d+/g)[0]; //regex to grab # from id
+        	reportNumber = currentPost.id.match(/\d+/g)[0]; //regex to grab # from id
 
-			reportNumber = dataHold["Idea" + counter]["reports"];
-
-			increment = database.ref("Ideas/Idea" + counter);
+			increment = database.ref("Ideas/Idea" + reportNumber);
 
 			if(reportedAlrdy == false){ //check if post has already been reported
 				newReported = reportNumber + 1;
@@ -475,48 +284,18 @@
 
 				//remove post from firebase database if the number of reports are equal to or greater than 1/5 of the number of likes:
 
-				likesNumber = dataHold["Idea" + counter]["likes"];
+				likesNumber = dataHold["Idea" + reportNumber]["likes"];
 
 				if (likesNumber/5 <= newReported){
-					increment.remove(); //removes idea from firebase database
+					//increment.remove(); //this line removes idea from firebase database. However instead of removing the idea from the database I will add the post to a "deletable" section of the database so that I (the client) could review whether it should be taken down or the report button was mistakenly pressed: (the remove() feature will be used if my website gets to populated to monitor)
+
+					deletableSection = database.ref("Deletable");
+					title = document.getElementById("title" + reportNumber);
+					deletableSection.push("Delete Post: " + title.innerHTML);
 				};
 			};
 
 		};
-
-		function sortByLikes (){
-        	reset();
-
-        	//sort dataHold dictionary by likes: 
-
-        	likesSorted = Object.values(dataHold);
-
-        	likesSorted.sort(function(a, b) { return b.likes - a.likes; }); // Sort by likes
-
-        	for (i = 0; i < likesSorted.length; i++){
-        		showPost(likesSorted[i]); //redraw all posts
-        	};
-        };
-
-
-        function sortByDate (){
-        	reset();
-        	entriesCount = Object.keys(dataHold).length + 1;
-
-        	for (const i in dataHold) //draws posts in reverse order, from newest to oldest, looping through dataHold dictionary
-            {
-            	loopCount = parseInt(i.substring(i.length-1));
-            	reversedCount = entriesCount - loopCount;
-            	reversedKey = "Idea" + reversedCount;
-                showPost(dataHold[reversedKey]);
-            }
-        };
-
-        function reset(){
-        	document.getElementById("postSection").innerHTML = "";
-        	ideaNumber = counter = 0;
-	        likedAlrdy = reportedAlrdy = false;
-        };
 
         function showSuggested(){
 
@@ -534,6 +313,7 @@
 
        		input = document.getElementById("searchInput").value;
        		suggestionCounter = 0; //used limit # of tag suggestions to 4
+       		suggestionList = []; //to make sure the program does not show the same suggestion twice
 
        		baseLoop:
        		for (const idea in data){ //loops through ideas
@@ -542,10 +322,14 @@
        				singleTag = data[idea]["tags"][tags].toLowerCase(); //keep everything lower case
 
        				if (singleTag.includes(input.toLowerCase())){ //check if input is contained in any tags
+       					if (suggestionList.includes(singleTag)){ //make sure same tag cannot be shown twice
+       						continue;
+       					};
+       					suggestionList.push(singleTag);
        					newSuggestion = document.createElement("button");
        					newSuggestion.appendChild(document.createTextNode(singleTag));
        					newSuggestion.setAttribute("id","tagName: " + singleTag);
-       					newSuggestion.setAttribute("onclick","showTagged(this)");
+       					newSuggestion.setAttribute("onclick","sortTagged(this)");
        					document.getElementById("suggestions").appendChild(newSuggestion);
        					suggestionCounter ++;
        					if (suggestionCounter > 3) { //maximize suggestionCounter to 4
@@ -554,33 +338,6 @@
        				};
        			};
        		};
-       	};
-
-       	function showTagged(tagName){ //searches through database for all posts that match this tag and then display them
-       		reset();
-
-       		tag = tagName.id.split("tagName: ")[1].toLowerCase();
-
-        	//display only values with tag in dataHold dictionary:
-
-        	dataList = Object.values(dataHold);
-        	dataHold = {}; //reset dataHold to only contain tagged posts so that tagged posts can be sorted
-
-        	for (i = 0; i < dataList.length; i++){ //loops through ideas
-       			for (const tags in dataList[i]["tags"]){ //loops through all tags on each idea
-
-       				currentTag = dataList[i]["tags"][tags].toLowerCase();
-
-       				if (currentTag == tag){ //check if tag = 
-       					showPost(dataList[i]); //redraw posts with tag match
-       					dataHold["Idea" + i] = dataList[i];
-       					break;
-       				};
-       			};
-       		};
-
-       		console.log(dataHold);
-       		
        	};
 
        	function hideSuggested(){
